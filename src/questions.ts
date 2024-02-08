@@ -1,6 +1,8 @@
 import path from 'path';
 import fs from 'fs';
 import { EChoicesBoilerPlate } from './enum/choices-boilerplate.enum';
+import { EErros } from './enum/errors.enum';
+import { EGitName } from './enum/git-name.enum';
 
 export const questions = [
   {
@@ -14,18 +16,17 @@ export const questions = [
     name: 'folderName',
     message: 'Qual nome devo dar para a pasta do projeto?',
     validate(folderName: string) {
-      if (!folderName) return 'Insirá um valor para o nome do projeto!';
+      if (!folderName) return EErros.ERROR_NULL;
 
-      if (/[^\w\s-]/.test(folderName))
-        return 'Não pode ter caracteres especiais!';
+      if (/[^\w\s-]/.test(folderName)) return EErros.ERROR_ESPECIAL_CHAR;
 
-      if (folderName === 'cli-node-ts')
-        return 'Não pode existir pasta com o mesmo nome do repositório do github';
+      if (folderName === EGitName.ERROR_CLI_NODE_TS)
+        return EErros.ERROR_GIT_NAME;
 
       try {
         const dir = path.resolve(folderName);
         fs.accessSync(dir, fs.constants.R_OK);
-        return 'Já existe uma paste com esse nome!';
+        return EErros.ERROR_INVALID_FOLDER;
       } catch (err) {}
 
       return true;
