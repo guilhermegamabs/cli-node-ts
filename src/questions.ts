@@ -1,3 +1,5 @@
+import path from 'path';
+import fs from 'fs';
 import { EChoicesBoilerPlate } from './enum/choices-boilerplate.enum';
 
 export const questions = [
@@ -9,11 +11,24 @@ export const questions = [
   },
   {
     type: 'input',
-    name: 'techName',
+    name: 'folderName',
     message: 'Qual nome devo dar para a pasta do projeto?',
     validate(folderName: string) {
-      console.log(folderName);
-      return 'Deu ruim';
+      if (!folderName) return 'Insirá um valor para o nome do projeto!';
+
+      if (/[^\w\s-]/.test(folderName))
+        return 'Não pode ter caracteres especiais!';
+
+      if (folderName === 'cli-node-ts')
+        return 'Não pode existir pasta com o mesmo nome do repositório do github';
+
+      try {
+        const dir = path.resolve(folderName);
+        fs.accessSync(dir, fs.constants.R_OK);
+        return 'Já existe uma paste com esse nome!';
+      } catch (err) {}
+
+      return true;
     },
   },
 ];
