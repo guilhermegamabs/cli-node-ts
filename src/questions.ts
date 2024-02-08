@@ -20,13 +20,14 @@ export const questions = [
 
       if (/[^\w\s-]/.test(folderName)) return EErros.ERROR_ESPECIAL_CHAR;
 
-      if (folderName === EGitName.ERROR_CLI_NODE_TS)
+      if (folderName === EGitName.NODEJS_TS || folderName === EGitName.SCSS)
         return EErros.ERROR_GIT_NAME;
 
       try {
         const dir = path.resolve(folderName);
         fs.accessSync(dir, fs.constants.R_OK);
         return EErros.ERROR_INVALID_FOLDER;
+        // eslint-disable-next-line no-empty
       } catch (err) {}
 
       return true;
